@@ -1,34 +1,34 @@
 import { createClient } from "@/lib/supabase/server";
-import { Zap, Brain, Shield, CreditCard } from "lucide-react";
+import { Lightbulb, CreditCard, BookOpen, TrendingUp } from "lucide-react";
 
 export const metadata = {
-  title: "Dashboard — 305 Starter Kit",
+  title: "Dashboard — IdeaLab",
 };
 
 const quickLinks = [
   {
-    icon: Brain,
-    title: "AI Chat",
-    description: "Test the AI streaming integration",
+    icon: Lightbulb,
+    title: "Validate Idea",
+    description: "Describe your idea and get instant AI analysis",
     href: "/dashboard/ai",
   },
   {
-    icon: Shield,
-    title: "Organization",
-    description: "Manage your team and roles",
-    href: "/dashboard/org",
+    icon: TrendingUp,
+    title: "Past Analyses",
+    description: "Review your previous idea validations",
+    href: "/dashboard/ai",
   },
   {
     icon: CreditCard,
     title: "Billing",
-    description: "Manage your subscription",
+    description: "Manage your subscription plan",
     href: "/dashboard/billing",
   },
   {
-    icon: Zap,
-    title: "Settings",
-    description: "Configure your account",
-    href: "/dashboard/settings",
+    icon: BookOpen,
+    title: "Docs",
+    description: "Learn how to get the most from IdeaLab",
+    href: "/dashboard/docs",
   },
 ] as const;
 
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
           {user?.email ? `, ${user.email.split("@")[0]}` : ""}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Here&apos;s an overview of your workspace.
+          Ready to validate your next big idea?
         </p>
       </div>
 
@@ -58,9 +58,7 @@ export default async function DashboardPage() {
             className="glass-panel p-5 transition-all hover:border-primary/30 hover:glow-gold group"
           >
             <link.icon className="h-6 w-6 text-secondary transition-colors group-hover:text-primary" />
-            <h3 className="mt-3 font-semibold text-foreground">
-              {link.title}
-            </h3>
+            <h3 className="mt-3 font-semibold text-foreground">{link.title}</h3>
             <p className="mt-1 text-sm text-muted-foreground">
               {link.description}
             </p>

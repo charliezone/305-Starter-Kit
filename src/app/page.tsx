@@ -1,30 +1,30 @@
 import Link from "next/link";
-import { Zap, Shield, Brain, Layers } from "lucide-react";
+import { Lightbulb, TrendingUp, Target, Rocket } from "lucide-react";
 
 const features = [
   {
-    icon: Shield,
-    title: "Auth & Multi-Tenancy",
+    icon: Lightbulb,
+    title: "Instant AI Analysis",
     description:
-      "Supabase Auth with organizations, roles, and row-level security out of the box.",
+      "Describe your idea and get real-time market fit analysis, competitive landscape, and viability score.",
   },
   {
-    icon: Brain,
-    title: "AI-Ready",
+    icon: TrendingUp,
+    title: "Monetization Strategies",
     description:
-      "Vercel AI SDK with streaming responses, tool calling, and modular agent architecture.",
+      "AI-generated revenue models, pricing recommendations, and go-to-market strategies tailored to your idea.",
   },
   {
-    icon: Layers,
-    title: "Stripe Billing",
+    icon: Target,
+    title: "Competition Mapping",
     description:
-      "Subscription management, webhooks, and customer portal pre-wired and ready to go.",
+      "Identify key competitors, market gaps, and your unique positioning — all in seconds.",
   },
   {
-    icon: Zap,
-    title: "Ship Fast",
+    icon: Rocket,
+    title: "From Idea to MVP",
     description:
-      "Next.js 15, Drizzle ORM, Tailwind CSS, and Shadcn/UI — production-grade from day one.",
+      "Get a prioritized feature list, tech stack recommendations, and a launch timeline for your startup.",
   },
 ] as const;
 
@@ -35,7 +35,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <span className="text-lg font-bold tracking-tight text-gradient-miami">
-            305 Starter Kit
+            IdeaLab
           </span>
           <nav className="flex items-center gap-4">
             <Link
@@ -58,23 +58,25 @@ export default function LandingPage() {
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-24">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">
-            Build Your SaaS
-            <span className="block text-gradient-miami">In Record Time</span>
+            Validate Your Startup Idea
+            <span className="block text-gradient-miami">
+              With AI in Seconds
+            </span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            The production-ready starter kit with authentication, multi-tenancy,
-            AI integration, and Stripe billing — so you can focus on what makes
-            your product unique.
+            Stop guessing. Describe your startup idea and get instant AI-powered
+            analysis — market fit, competition, monetization, and a roadmap to
+            your MVP.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link
               href="/signup"
               className="inline-flex h-12 items-center rounded-xl bg-primary px-8 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90 glow-gold"
             >
-              Start Building
+              Try It Free
             </Link>
             <a
-              href="https://github.com"
+              href="https://github.com/charliezone/305-Starter-Kit"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-12 items-center rounded-xl border border-border px-8 text-base font-semibold text-foreground transition-colors hover:bg-muted"
@@ -107,9 +109,16 @@ export default function LandingPage() {
       <footer className="border-t border-border/40 py-8 text-center text-sm text-muted-foreground">
         <p>
           Built with{" "}
-          <span className="text-gradient-miami font-medium">
+          <span className="text-gradient-miami font-medium">IdeaLab</span> |
+          Powered by{" "}
+          <a
+            href="https://github.com/charliezone/305-Starter-Kit"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gradient-miami font-medium hover:underline"
+          >
             305 Starter Kit
-          </span>
+          </a>
         </p>
       </footer>
     </div>

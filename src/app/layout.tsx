@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "305 Starter Kit",
+  title: "IdeaLab — AI Startup Idea Validator",
   description:
-    "High-performance SaaS boilerplate for rapid MVP deployment.",
+    "Validate your startup idea in seconds with AI-powered market analysis, competition mapping, and monetization strategies.",
 };
 
 export default function RootLayout({

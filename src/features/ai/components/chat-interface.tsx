@@ -29,10 +29,11 @@ export function ChatInterface() {
             <div className="text-center space-y-3">
               <Bot className="mx-auto h-12 w-12 text-secondary" />
               <h3 className="text-lg font-semibold text-foreground">
-                305 AI Assistant
+                IdeaLab Validator
               </h3>
               <p className="text-sm text-muted-foreground max-w-sm">
-                Start a conversation to see streaming AI responses in action.
+                Describe your startup idea and I'll analyze market fit,
+                competition, monetization, and feasibility.
               </p>
             </div>
           </div>
@@ -43,7 +44,7 @@ export function ChatInterface() {
             key={message.id}
             className={cn(
               "flex gap-3 rounded-lg p-4",
-              message.role === "user" ? "bg-muted/50" : "glass-panel"
+              message.role === "user" ? "bg-muted/50" : "glass-panel",
             )}
           >
             <div
@@ -51,7 +52,7 @@ export function ChatInterface() {
                 "flex h-8 w-8 shrink-0 items-center justify-center rounded-md",
                 message.role === "user"
                   ? "bg-primary/20 text-primary"
-                  : "bg-secondary/20 text-secondary"
+                  : "bg-secondary/20 text-secondary",
               )}
             >
               {message.role === "user" ? (
@@ -62,7 +63,7 @@ export function ChatInterface() {
             </div>
             <div className="flex-1 text-sm leading-relaxed whitespace-pre-wrap">
               {message.parts.map((part, i) =>
-                part.type === "text" ? <span key={i}>{part.text}</span> : null
+                part.type === "text" ? <span key={i}>{part.text}</span> : null,
               )}
               {isLoading &&
                 message.role === "assistant" &&
@@ -81,13 +82,13 @@ export function ChatInterface() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type a message..."
+            placeholder="Describe your startup idea..."
             disabled={isLoading}
             className={cn(
               "flex-1 rounded-lg border border-input bg-background px-4 py-2.5 text-sm",
               "placeholder:text-muted-foreground",
               "focus:outline-none focus:ring-2 focus:ring-ring",
-              "disabled:opacity-50"
+              "disabled:opacity-50",
             )}
           />
           <button
@@ -98,7 +99,7 @@ export function ChatInterface() {
               "bg-primary text-primary-foreground font-medium text-sm",
               "hover:bg-primary/90 transition-colors",
               "disabled:opacity-50 disabled:pointer-events-none",
-              "glow-gold"
+              "glow-gold",
             )}
           >
             {isLoading ? (

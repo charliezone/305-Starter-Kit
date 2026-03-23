@@ -4,7 +4,7 @@ import { BillingStatus } from "@/features/billing/components/billing-status";
 import { Separator } from "@/components/ui/separator";
 
 export const metadata = {
-  title: "Billing — 305 Starter Kit",
+  title: "Billing — IdeaLab",
 };
 
 export default async function BillingPage() {
