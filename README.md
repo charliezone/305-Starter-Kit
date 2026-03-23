@@ -52,52 +52,207 @@ src/
 
 ## Getting Started
 
-### 1. Clone & Install
-
 ```bash
-git clone <repo-url> && cd 305-starter-kit
+git clone https://github.com/charliezone/305-Starter-Kit.git && cd 305-Starter-Kit
 npm install
-```
-
-### 2. Configure Environment
-
-```bash
 cp .env.example .env
 ```
 
-Fill in all credentials (see Environment Variables section below).
+Then follow the setup guides below to fill in your `.env` file.
 
-### 3. Push Database Schema
+---
+
+## Setup Guide
+
+### 1. Supabase (Auth + Database)
+
+Supabase provides both **authentication** and the **PostgreSQL database**.
+
+1. Go to [supabase.com](https://supabase.com) → **New Project**
+2. Choose a name, password, and region → **Create Project**
+3. Wait for the project to finish provisioning (~2 minutes)
+4. Go to **Settings → API** and copy:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
+```
+
+5. Go to **Settings → Database → Connection string → Direct** and copy:
+
+```bash
+DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.xxxxxxxxxxxxx.supabase.co:5432/postgres
+```
+
+> **Tip:** Replace `[YOUR-PASSWORD]` with the password you set when creating the project.
+
+6. Push the database schema:
 
 ```bash
 npm run db:push
 ```
 
-### 4. Run Development Server
+This creates all 4 tables: `profiles`, `organizations`, `memberships`, `license_keys`.
+
+7. **(Optional) Enable OAuth providers:**
+   - Go to **Authentication → Providers**
+   - Enable Google, GitHub, etc.
+   - Add redirect URL: `http://localhost:3000/auth/callback`
+
+---
+
+### 2. Stripe (Payments + Subscriptions)
+
+Stripe handles **checkout, subscriptions, and the customer billing portal**.
+
+1. Go to [stripe.com](https://stripe.com) → **Create account** (or log in)
+2. Make sure you're in **Test mode** (toggle in top-right)
+3. Go to **Developers → API keys** and copy:
+
+```bash
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+```
+
+4. **Create 3 products with prices:**
+   - Go to **Product catalog → Add product**
+   - Create 3 products (e.g., Explorer, Founder, Accelerator)
+   - For each, add a **recurring price** (monthly)
+   - Copy each Price ID (`price_...`) into:
+
+```bash
+NEXT_PUBLIC_STRIPE_PRICE_STARTER=price_...
+NEXT_PUBLIC_STRIPE_PRICE_PRO=price_...
+NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE=price_...
+```
+
+5. **Set up webhook (local development):**
+
+```bash
+# Install Stripe CLI: https://stripe.com/docs/stripe-cli
+brew install stripe/stripe-cli/stripe
+
+# Login and forward events
+stripe login
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
+
+The CLI will print a webhook signing secret — copy it:
+
+```bash
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+6. **Set up webhook (production):**
+   - Go to **Developers → Webhooks → Add endpoint**
+   - URL: `https://yourdomain.com/api/webhooks/stripe`
+   - Events to subscribe:
+     - `checkout.session.completed`
+     - `customer.subscription.updated`
+     - `customer.subscription.deleted`
+     - `invoice.payment_failed`
+   - Copy the signing secret to `STRIPE_WEBHOOK_SECRET`
+
+7. **Test card number:** `4242 4242 4242 4242` (any future date, any CVC)
+
+---
+
+### 3. OpenAI (AI Features)
+
+Powers the **AI streaming chat** on `/dashboard/ai`.
+
+1. Go to [platform.openai.com](https://platform.openai.com) → **Sign up / Log in**
+2. Go to **API keys → Create new secret key**
+3. Copy the key:
+
+```bash
+OPENAI_API_KEY=sk-proj-...
+```
+
+> **Note:** You need credits on your OpenAI account. New accounts get $5 free. After that, add a payment method at [platform.openai.com/settings/organization/billing](https://platform.openai.com/settings/organization/billing).
+
+The default model is `gpt-4o-mini` (fast and cheap). To change it, edit `src/features/ai/lib/ai-config.ts`.
+
+---
+
+### 4. Resend (Transactional Email) — Optional
+
+Powers **welcome emails, password resets, and team invites**. Skip this if you don't need email yet.
+
+1. Go to [resend.com](https://resend.com) → **Sign up**
+2. Go to **API Keys → Create API Key**
+3. Copy:
+
+```bash
+RESEND_API_KEY=re_...
+EMAIL_FROM=YourApp <onboarding@resend.dev>
+```
+
+> **For production:** You must verify your own domain at **Domains → Add domain** and add the DNS records (SPF + DKIM). Then update `EMAIL_FROM` to use your domain.
+
+---
+
+### 5. Admin Access — Optional
+
+The admin panel at `/admin` is protected by email whitelist.
+
+```bash
+ADMIN_EMAILS=you@example.com,cofounder@example.com
+```
+
+Comma-separated list. Only users whose Supabase auth email matches will see the admin panel.
+
+---
+
+### 6. App URL
+
+```bash
+# Development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Production (update when you deploy)
+NEXT_PUBLIC_APP_URL=https://yourdomain.com
+```
+
+---
+
+### 7. Run It
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) — you should see the landing page.
 
-## Environment Variables
+**Quick test flow:**
+1. Click **Sign Up** → create an account
+2. Go to **Dashboard** → you're authenticated
+3. Go to **AI Chat** (or Validate Idea) → test streaming AI
+4. Go to **Billing** → see pricing tiers (use test card `4242 4242 4242 4242`)
+5. Go to **Admin** → if your email is in `ADMIN_EMAILS`, you'll see the admin panel
 
-| Variable | Required | Description |
+---
+
+## Environment Variables Reference
+
+| Variable | Required | Where to get it |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anonymous key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key |
-| `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `STRIPE_SECRET_KEY` | Yes | Stripe secret key |
-| `STRIPE_WEBHOOK_SECRET` | Yes | Stripe webhook signing secret |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Yes | Stripe publishable key |
-| `OPENAI_API_KEY` | Yes | OpenAI API key (for AI features) |
-| `RESEND_API_KEY` | For email | Resend API key |
-| `EMAIL_FROM` | For email | Sender address |
-| `ADMIN_EMAILS` | For admin | Comma-separated admin emails |
-| `NEXT_PUBLIC_STRIPE_PRICE_*` | For billing | Stripe Price IDs per plan |
-| `NEXT_PUBLIC_APP_URL` | Yes | App URL (e.g., `http://localhost:3000`) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase → Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase → Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase → Settings → API |
+| `DATABASE_URL` | Yes | Supabase → Settings → Database → Connection string |
+| `STRIPE_SECRET_KEY` | Yes | Stripe → Developers → API keys |
+| `STRIPE_WEBHOOK_SECRET` | Yes | Stripe CLI or Stripe → Developers → Webhooks |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Yes | Stripe → Developers → API keys |
+| `OPENAI_API_KEY` | Yes | OpenAI → API keys |
+| `RESEND_API_KEY` | Optional | Resend → API Keys |
+| `EMAIL_FROM` | Optional | Your verified sender address |
+| `ADMIN_EMAILS` | Optional | Comma-separated admin emails |
+| `NEXT_PUBLIC_STRIPE_PRICE_STARTER` | For billing | Stripe → Product catalog → Price ID |
+| `NEXT_PUBLIC_STRIPE_PRICE_PRO` | For billing | Stripe → Product catalog → Price ID |
+| `NEXT_PUBLIC_STRIPE_PRICE_ENTERPRISE` | For billing | Stripe → Product catalog → Price ID |
+| `NEXT_PUBLIC_APP_URL` | Yes | Your deployment URL |
 
 ## Database Commands
 
