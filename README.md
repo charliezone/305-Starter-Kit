@@ -141,7 +141,7 @@ stripe listen --forward-to localhost:3000/api/webhooks/stripe
 The CLI will print a webhook signing secret — copy it:
 
 ```bash
-STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_WEBHOOK_SECRET=whsec_e20ec391937df77037ca7387bc979db3ba62cb1fdae5add5dec586c2eeebec0d
 ```
 
 6. **Set up webhook (production):**

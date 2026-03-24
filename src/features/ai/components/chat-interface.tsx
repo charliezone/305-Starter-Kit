@@ -3,13 +3,18 @@
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { cn } from "@/lib/utils";
-import { Send, Loader2, Bot, User } from "lucide-react";
+import { Send, Loader2, Bot, User, AlertTriangle } from "lucide-react";
 
 export function ChatInterface() {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status, error } = useChat();
 
   const isLoading = status === "streaming" || status === "submitted";
+
+  const isQuotaError =
+    error?.message?.includes("insufficient_quota") ||
+    error?.message?.includes("quota") ||
+    error?.message?.includes("exceeded");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +29,25 @@ export function ChatInterface() {
     <div className="flex h-full flex-col">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && (
+        {error && (
+          <div className="mx-auto max-w-md rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+            <div className="flex gap-3">
+              <AlertTriangle className="h-5 w-5 shrink-0 text-destructive" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-destructive">
+                  {isQuotaError ? "API Quota Exceeded" : "Error"}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {isQuotaError
+                    ? "The OpenAI API quota has been exceeded. Please add credits at platform.openai.com/settings/organization/billing"
+                    : error.message}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {messages.length === 0 && !error && (
           <div className="flex h-full items-center justify-center">
             <div className="text-center space-y-3">
               <Bot className="mx-auto h-12 w-12 text-secondary" />
